@@ -9,6 +9,7 @@ import Home from './Containers/Home/Home';
 import Contact from './Components/Contact/Contact';
 import Articles from './Containers/Articles/Articles';
 import Header from './Components/Header/Header';
+import Article from './Containers/Articles/Article/Article';
 
 function App() {
   return (
@@ -16,8 +17,10 @@ function App() {
       <Layout>
         <Routes>
           <Route exact path="/" Component={Home} />
-          <Route exact path="/contact" Component={Contact} />
+          <Route path="/contact" Component={Contact} />
           <Route exact path="/articles" Component={Articles} />
+          <Route exact path='/articles/:id' Component={Article} />
+          <Route render={() => <h1>404</h1>} />
         </Routes>
       </Layout>
     </div>

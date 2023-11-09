@@ -1,11 +1,26 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect } from 'react';
+// import { Redirect } from 'react-router-dom';
 
 function Articles() {
+
+    useEffect(() => {
+        props.history.replace('/');
+
+        /*
+            - push : ajouter une page dans l'historique ('/')
+                - /
+                - /articles
+                - /
+            -replace : remplacer la page actuelle ('/')
+                - /            
+        */
+    }, []);
+
     return (
         <>
         <h1>Articles</h1>;
-        <Link to="/contact" style={{marginRight: '10px'}}>Contact</Link>
+        {/* <Redirect to ="/"></Redirect> redirige l'utilisateur */}
+
         </>
     )
 }

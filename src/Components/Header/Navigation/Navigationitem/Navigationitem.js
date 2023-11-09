@@ -1,13 +1,20 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import classes from './Navigationitem.module.css';
 
 function NavigationItem(props) {
+
     return (
         <li className={classes.NavigationItem}>
-            <Link to={props.to}>{props.children}</Link>
+            <NavLink 
+                exact={props.exact} 
+                to={props.to} 
+                activeclassname={classes.active}>
+                {props.children}
+            </NavLink>
+                                    {/* activeStyle={color='yellow'} possible si on ne veut pas utiliser de classe*/}
         </li>
     )
 }
 
-export default NavigationItem;
+export default (NavigationItem);
