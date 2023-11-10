@@ -14,7 +14,7 @@ function Layout(props) {
 
         {/*Pied de page*/}
     </>
-    )
+    );
 }
 
 /*

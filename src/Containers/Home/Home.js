@@ -1,20 +1,20 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import routes from '../../routes.js';
 
 function Home() {
     return (
         <>
             <h1>Accueil</h1>
-            <Link to="/articles/1">Voir mon article</Link>
-            <Link 
+            <Link to={routes.ARTICLES + "/1"}>Voir mon article</Link>
+            <Link
                 to={{
-                    pathname:"/articles",
-                    // hash: '#projets' 
-                    // search:"?order=new"
+                    pathname: routes.ARTICLES + "/1",
+                    // hash: '#projets'
+                    // search: "?order=new"
                     state: { fromHome: true }
                 }}
-                style={{marginLeft: '10px'}}>Lien vers une ancre</Link>
-            
+                style={{marginLeft: '15px'}}>Lien vers une ancre</Link>
         </>
     );
 }
