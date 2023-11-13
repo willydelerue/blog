@@ -1,13 +1,19 @@
 //Librairies
 
 import React, { useState } from "react";
+import { useParams, useNavigate } from 'react-router-dom'
 import axios from '../../../Config/axios-firebase.js';
 
 // composants
 import Input from '../../../Components/UI/Input/Input';
 import classes from './Ajouter.module.css';
+import routes from '../../../Config/routes.js';
 
-function Ajouter() {
+
+function Ajouter(props) {
+
+    const navigate = useNavigate();
+
     //states
 
     const [inputs, setInputs] = useState({
@@ -63,7 +69,7 @@ function Ajouter() {
                         {value: false, displayValue: 'Publié'}
                     ]
                 },
-                value: '',
+                value: true,
                 label: 'Etat',
                 valid: true,
                 validation : {}
@@ -114,6 +120,21 @@ function Ajouter() {
     const formHandler = event => {
         event.preventDefault();
 
+        const article = {
+            titre: inputs.titre.value,
+            contenu: inputs.contenu.value,
+            auteur: inputs.auteur.value,
+            brouillon: inputs.brouillon.value,    
+        };
+
+        axios.post('/articles.json', article)
+            .then(Response => {
+                console.log(Response);                            
+                navigate(routes.ARTICLES);
+            })
+            .catch(error => {
+                console.log(error);
+            });
 
     }
 
@@ -127,7 +148,7 @@ function Ajouter() {
     }
 
     let form = (
-        <form className={classes.Ajouter}>
+        <form className={classes.Ajouter} onSubmit={(e) => formHandler(e)}>
             {formElementsArray.map(formElement => (
                 <Input 
                     key     = {formElement.id}
