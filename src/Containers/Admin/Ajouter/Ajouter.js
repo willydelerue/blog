@@ -1,11 +1,14 @@
 //Librairies
 
 import React, { useState } from "react";
+import axios from '../../../Config/axios-firebase.js';
 
 // composants
 import Input from '../../../Components/UI/Input/Input';
+import classes from './Ajouter.module.css';
 
 function Ajouter() {
+    //states
 
     const [inputs, setInputs] = useState({
             titre: {
@@ -14,14 +17,28 @@ function Ajouter() {
                     type: 'text',
                     placeholder: "Titre de l'article"
                 },
-                value: ' ',
-                label: 'Titre'
+                value: '',
+                label: 'Titre',
+                valid: false,
+                validation : {
+                    required  : true,
+                    minLength : 5,
+                    maxLength : 85
+                },
+                touched: false,
+                error : "Le titre doit faire entre 5 et 85 caractères."
             },
             contenu: {
                 elementType: 'textarea',
                 elementConfig: {},
                 value: '',
-                label: "Contenu de l'article"
+                label: "Contenu de l'article",
+                valid: false,
+                validation : {
+                    required : true
+                },
+                touched: false,
+                error: "Le contenu ne doit pas être vide."
             },
             auteur: {
                 elementType:'input',
@@ -30,9 +47,75 @@ function Ajouter() {
                     placeholder:"Auteur de l'article"
                 },
                 value: '',
-                label: 'Auteur'
+                label: 'Auteur',
+                valid: false,
+                validation : {
+                    required : true
+                },
+                touched: false,
+                error: "Il doit y avoir un auteur pour cet article." 
+            },
+            brouillon: {
+                elementType: 'select',
+                elementConfig: {
+                    options: [
+                        {value: true, displayValue: 'Brouillon'},
+                        {value: false, displayValue: 'Publié'}
+                    ]
+                },
+                value: '',
+                label: 'Etat',
+                valid: true,
+                validation : {}
             }
         });
+        const [valid, setValid] = useState(false);
+
+    // Fonctions
+
+    const checkValidity = (value, rules) => {
+        let isValid = true;
+
+        if (rules.required) {
+            isValid = value.trim() !== '' && isValid;           
+        }
+
+        if (rules.minLength) {
+            isValid = value.length >= rules.minLength && isValid;
+        }
+
+        if(rules.maxLength) {
+            isValid = value.length <= rules.maxLength && isValid;
+        }
+
+        return isValid;
+    }    
+        
+    const inputChangedHandler =(event, id) => {
+
+        // Change la valeur
+        const nouveauxInputs = {...inputs};
+        nouveauxInputs[id].value = event.target.value;
+        nouveauxInputs[id].touched = true;
+    
+
+        // Vérification de la valeur
+        nouveauxInputs[id].valid = checkValidity(event.target.value, nouveauxInputs[id].validation);
+        setInputs(nouveauxInputs);
+
+        // Vérification du formulaire
+        let formIsvalid = true;
+        for (let input in nouveauxInputs) {
+            formIsvalid = nouveauxInputs[input].valid && formIsvalid;
+        }
+        setValid(formIsvalid);
+    };
+
+    const formHandler = event => {
+        event.preventDefault();
+
+
+    }
 
     // Variables
     const formElementsArray = [];
@@ -44,24 +127,32 @@ function Ajouter() {
     }
 
     let form = (
-        <form>
+        <form className={classes.Ajouter}>
             {formElementsArray.map(formElement => (
                 <Input 
-                    key    = {formElement.id}
-                    value  = {formElement.config.value}
-                    label  = {formElement.config.label}
-                    type   = {formElement.config.elementType}
-                    config = {formElement.config.elementConfig}
+                    key     = {formElement.id}
+                    id      = {formElement.id}
+                    value   = {formElement.config.value}
+                    label   = {formElement.config.label}
+                    type    = {formElement.config.elementType}
+                    config  = {formElement.config.elementConfig}
+                    valid   = {formElement.config.valid}
+                    touched = {formElement.config.touched}
+                    error   = {formElement.config.error}
+                    changed ={(e) => inputChangedHandler(e, formElement.id)}
                 />
             ))}
+            <div className={classes.submit}>
+                <input type ="submit" value="Ajouter un article" disabled={!valid}/>
+            </div>
         </form>
     );
 
     return ( 
-        <>    
+        <div className="container">    
             <h1>Ajouter</h1>
             {form}
-        </>
+        </div>
     );
 }
 

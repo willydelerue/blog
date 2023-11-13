@@ -2,7 +2,8 @@
 import React from 'react';
 import './App.css';
 import { Route, Routes, useNavigate } from 'react-router-dom';
-import routes from './routes.js';
+import routes from './Config/routes.js';
+
 
 // Composants
 import Layout from './HOC/Layout/Layout';

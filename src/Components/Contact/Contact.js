@@ -2,7 +2,7 @@
 import React from 'react';
 import classes from './Contact.module.css';
 import { Route, Routes, useNavigate } from 'react-router-dom';
-import routes from '../../routes';
+import routes from '../../Config/routes';
 
 
 

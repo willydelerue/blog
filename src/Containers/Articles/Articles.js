@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 // import { Redirect } from 'react-router-dom';
 import { Link, useNavigate } from 'react-router-dom';
-import routes from "../../routes";
+import routes from "../../Config/routes";
 
 function Articles(props) {
     

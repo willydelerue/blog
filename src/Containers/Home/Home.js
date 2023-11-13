@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import routes from '../../routes.js';
+import routes from '../../Config/routes.js';
 
 function Home() {
     return (
