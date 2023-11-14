@@ -22,7 +22,7 @@ function App() {
           <Route exact path={routes.HOME} element ={<Home />} />
           <Route path={routes.CONTACT + "/*"} element ={<Contact />} />
           <Route exact path={routes.ARTICLES} element ={<Articles />} />
-          <Route exact path={routes.ARTICLES + "/:id"} element ={<Article />} />
+          <Route exact path={routes.ARTICLES + "/:slug"} element ={<Article />} />
           <Route exact path={routes.AJOUTER} element ={<Ajouter  />} />
           <Route render={() => <h1>404</h1>} />
         </Routes>

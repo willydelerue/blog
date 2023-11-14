@@ -1,0 +1,21 @@
+.lead {
+    color: rgba (0, 0, 0, .5);
+    margin-bottom: 15px;
+}
+
+.content {
+    text-align: left;
+    padding: 30px;
+}
+
+.author {
+    background-color: #f1f1f1;
+    padding: 15px;
+    border-radius: 4px;
+    margin-top: 15px;
+}
+
+.author span {
+    margin-left: 1rem;
+    font-size: 0.9rem;
+}

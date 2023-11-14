@@ -34,6 +34,20 @@ function Ajouter(props) {
                 touched: false,
                 error : "Le titre doit faire entre 5 et 85 caractères."
             },
+            accroche: {
+                elementType: 'textarea',
+                elementConfig: {},
+                value: '',
+                label: "Accroche de l'article",
+                valid: false,
+                validation : {
+                    required : true,
+                    minLength : 10,
+                    maxLength : 50
+                },
+                touched: false,
+                error: "L'accroche ne doit pas être vide et doit être comprise entre 10 et 140 caractères."
+            },
             contenu: {
                 elementType: 'textarea',
                 elementConfig: {},
@@ -73,8 +87,8 @@ function Ajouter(props) {
                 label: 'Etat',
                 valid: true,
                 validation : {}
-            }
-        });
+            },
+    });
         const [valid, setValid] = useState(false);
 
     // Fonctions
@@ -117,14 +131,38 @@ function Ajouter(props) {
         setValid(formIsvalid);
     };
 
+    const generateSlug = (str) => {
+            str = str.replace(/^\s+|\s+$/g, ''); // trim
+            str = str.toLowerCase();
+          
+            // remove accents, swap ñ for n, etc
+            var from = "àáãäâèéëêìíïîòóöôùúüûñç·/_,:;";
+            var to   = "aaaaaeeeeiiiioooouuuunc------";
+        
+            for (var i=0, l=from.length ; i<l ; i++) {
+                str = str.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
+            }
+        
+            str = str.replace(/[^a-z0-9 -]/g, '') // remove invalid chars
+                .replace(/\s+/g, '-') // collapse whitespace and replace by -
+                .replace(/-+/g, '-'); // collapse dashes
+        
+            return str;        
+    }
+
     const formHandler = event => {
         event.preventDefault();
 
+        const slug = generateSlug(inputs.titre.value);
+
         const article = {
             titre: inputs.titre.value,
+            accroche: inputs.accroche.value,
             contenu: inputs.contenu.value,
             auteur: inputs.auteur.value,
-            brouillon: inputs.brouillon.value,    
+            brouillon: inputs.brouillon.value, 
+            date: Date.now(),   
+            slug: slug
         };
 
         axios.post('/articles.json', article)

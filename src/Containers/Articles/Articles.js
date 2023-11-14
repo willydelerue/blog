@@ -1,30 +1,47 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 // import { Redirect } from 'react-router-dom';
 import { Link, useNavigate } from 'react-router-dom';
 import routes from "../../Config/routes";
+import axios from '../../Config/axios-firebase';
 
-function Articles(props) {
-    
-    // const navigate = useNavigate();
+// Composant
+import DisplayedArticles from '../../Components/DisplayedArticles/DisplayedArticles'
 
-    // useEffect(() => {
-    //     navigate('/');
+function Articles() {
 
-    // //     /*
-    // //         - push : ajouter une page dans l'historique ('/')
-    // //             - /
-    // //             - /articles
-    // //             - /
-    // //         -replace : remplacer la page actuelle ('/')
-    // //             - /            
-    // //     */
-    // }, []);
+    // State
+    const [articles, setArticles] = useState([]);
+
+    // ComponentDidMount
+    useEffect(() => {
+
+        axios.get('/articles.json')
+            .then(response => {
+                
+                const articlesArray = [];
+
+                for (let key in response.data) {
+                    articlesArray.push({
+                        ...response.data[key],
+                        id: key
+                    });
+                }
+
+                articlesArray.reverse();
+
+                setArticles(articlesArray);
+
+            })
+            .catch(error => {
+                console.log(error);
+            });
+
+    }, []);
 
     return (
         <>
-        <h1>Articles</h1>;
-        <Link to={routes.CONTACT}></Link>
-        {/* <Redirect to ="/"></Redirect> redirige l'utilisateur */}
+            <h1>Articles</h1>
+            <DisplayedArticles articles={articles} />
         </>
     );
 }
