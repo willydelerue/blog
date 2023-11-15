@@ -18,7 +18,7 @@ function Articles() {
         axios.get('/articles.json')
             .then(response => {
                 
-                const articlesArray = [];
+                let articlesArray = [];
 
                 for (let key in response.data) {
                     articlesArray.push({
@@ -28,6 +28,8 @@ function Articles() {
                 }
 
                 articlesArray.reverse();
+
+                articlesArray = articlesArray.filter(article => article.brouillon == "false");
 
                 setArticles(articlesArray);
 

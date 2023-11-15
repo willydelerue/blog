@@ -16,10 +16,10 @@ function Home() {
     // ComponentDidMount
     useEffect(() => {
 
-        axios.get('/articles.json?orderBy="date"&limitToLast=3')
+        axios.get('/articles.json') //?orderBy="date"&limitToLast=3 (affiche 3 articles)
             .then(response => {
                 
-                const articlesArray = [];
+                let articlesArray = [];
 
                 for (let key in response.data) {
                     articlesArray.push({
@@ -28,7 +28,14 @@ function Home() {
                     });
                 }
 
+                //Chronologie
                 articlesArray.reverse();
+                
+                //Trier
+                articlesArray = articlesArray.filter(article => article.brouillon == "false");
+
+                // Limiter à 3
+                articlesArray = articlesArray.slice(0, 3);
 
                 setArticles(articlesArray);
 

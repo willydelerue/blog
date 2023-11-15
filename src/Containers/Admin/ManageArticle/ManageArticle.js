@@ -1,17 +1,18 @@
 //Librairies
 
 import React, { useState } from "react";
-import { useParams, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import axios from '../../../Config/axios-firebase.js';
 
 // composants
-import Input from '../../../Components/UI/Input/Input';
-import classes from './Ajouter.module.css';
+import Input from '../../../Components/UI/Input/Input.js';
+import classes from './ManageArticle.module.css';
 import routes from '../../../Config/routes.js';
 
 
-function Ajouter(props) {
+function ManageArticle(props) {
 
+    const location = useLocation()
     const navigate = useNavigate();
 
     //states
@@ -23,9 +24,9 @@ function Ajouter(props) {
                     type: 'text',
                     placeholder: "Titre de l'article"
                 },
-                value: '',
+                value: location.state && location.state.article ? location.state.article.titre : '',
                 label: 'Titre',
-                valid: false,
+                valid: location.state && location.state.article ? true : false,
                 validation : {
                     required  : true,
                     minLength : 5,
@@ -37,9 +38,9 @@ function Ajouter(props) {
             accroche: {
                 elementType: 'textarea',
                 elementConfig: {},
-                value: '',
+                value: location.state && location.state.article ? location.state.article.accroche : '',
                 label: "Accroche de l'article",
-                valid: false,
+                valid: location.state && location.state.article ? true : false,
                 validation : {
                     required : true,
                     minLength : 10,
@@ -51,9 +52,9 @@ function Ajouter(props) {
             contenu: {
                 elementType: 'textarea',
                 elementConfig: {},
-                value: '',
+                value: location.state && location.state.article ? location.state.article.contenu : '',
                 label: "Contenu de l'article",
-                valid: false,
+                valid: location.state && location.state.article ? true : false,
                 validation : {
                     required : true
                 },
@@ -66,9 +67,9 @@ function Ajouter(props) {
                     type:'text',
                     placeholder:"Auteur de l'article"
                 },
-                value: '',
+                value: location.state && location.state.article ? location.state.article.auteur : '',
                 label: 'Auteur',
-                valid: false,
+                valid: location.state && location.state.article ? true : false,
                 validation : {
                     required : true
                 },
@@ -83,13 +84,13 @@ function Ajouter(props) {
                         {value: false, displayValue: 'Publié'}
                     ]
                 },
-                value: true,
+                value: location.state && location.state.article ? location.state.article.brouilon : '',
                 label: 'Etat',
-                valid: true,
+                valid: location.state && location.state.article ? true : false,
                 validation : {}
             },
     });
-        const [valid, setValid] = useState(false);
+        const [valid, setValid] = useState(location.state && location.state.article ? true : false);
 
     // Fonctions
 
@@ -165,16 +166,27 @@ function Ajouter(props) {
             slug: slug
         };
 
-        axios.post('/articles.json', article)
-            .then(Response => {
-                console.log(Response);                            
-                navigate(routes.ARTICLES);
+        if (location.state && location.state.article) {
+            axios.put('/articles/' + location.state.article.id + '.json', article)
+                .then(Response => {
+                    console.log(Response);                            
+                    navigate(routes.ARTICLES + '/' + article.slug, {replace : true});
             })
             .catch(error => {
                 console.log(error);
             });
-
+        }
+        else {
+            axios.post('/articles.json', article)
+                .then(Response => {
+                    console.log(Response);                            
+                    navigate(routes.ARTICLES, {replace : true});
+                })
+                .catch(error => {
+                    console.log(error);
+                });
     }
+}
 
     // Variables
     const formElementsArray = [];
@@ -202,17 +214,21 @@ function Ajouter(props) {
                 />
             ))}
             <div className={classes.submit}>
-                <input type ="submit" value="Ajouter un article" disabled={!valid}/>
+                <input type ="submit" value={location.state && location.state.article ? "Modifier l'article" : 'Ajouter un article'} disabled={!valid}/>
             </div>
         </form>
     );
 
     return ( 
         <div className="container">    
-            <h1>Ajouter</h1>
+            {location.state && location.state.article ? 
+                <h1>Modifier</h1>
+                :
+                <h1>Ajouter</h1>
+            }
             {form}
         </div>
     );
 }
 
-export default Ajouter;
+export default ManageArticle;

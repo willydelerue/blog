@@ -3,16 +3,20 @@
 
 import React, { useState, useEffect } from 'react';
 
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 // import classes from './Article.module.css';
 
 import axios from '../../../Config/axios-firebase';
 import classes from './Article.module.css';
+import routes from '../../../Config/routes';
 
 
 
 const Article = (props) => {
+
+    const navigate = useNavigate();
 
   // STATES
 
@@ -33,6 +37,9 @@ const Article = (props) => {
     axios.get('/articles.json/?orderBy="slug"&equalTo="' + slug + '"')
         .then(response => {
 
+        if(Object.keys(response.data).length === 0) {
+            navigate(routes.HOME);
+        }
         // Boucle pour récupération du titre
 
         for (let key in response.data) {
@@ -55,7 +62,16 @@ const Article = (props) => {
 
   }, []);
 
-
+  // Fonctions
+  const deleteClickedHandler = () => {
+    axios.delete('/articles/' + article.id +'.json')
+    .then(Response => {                           
+        navigate(routes.HOME);
+    })
+    .catch(error => {
+        console.log(error);
+    });
+  }
 
   // VARIABLES
 
@@ -82,12 +98,21 @@ const Article = (props) => {
                 {article.accroche}
             </div>
         {article.contenu}
+        <div className={classes.button}>
+        <Link 
+            to={routes.MANAGE_ARTICLE} 
+            state={ {article: article} }>
+                <button>Modifier</button>
+        </Link>
+            <button onClick={deleteClickedHandler}>Supprimer</button>
+        </div>
         </div>
         <div className={classes.author}>
             <b>{article.auteur}</b>
             <span>
                 Publié le {date}.
             </span>
+            {article.brouillon == "true" ? <span className={classes.badge}>Brouillon</span> : null}
 
         </div>
             </div>
