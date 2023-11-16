@@ -1,4 +1,7 @@
-import { initializeApp } from "firebase/app";
+// librairies
+import { initializeApp } from 'firebase/app';
+import 'firebase/compat/firestore';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
  const firebaseConfig = {
 
@@ -21,6 +24,6 @@ import { initializeApp } from "firebase/app";
 
   // Initialize Firebase
 
-  const firebase = initializeApp(firebaseConfig);
+  const fire = initializeApp(firebaseConfig);
 
-  export default firebase;
+  export default fire;

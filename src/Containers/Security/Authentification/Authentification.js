@@ -3,7 +3,8 @@ import React, { useState} from "react";
 import { checkValidity } from "../../../shared/utility";
 import { useLocation, useNavigate } from "react-router-dom";
 import classes from './Authentification.module.css';
-import firebase from "../../../Config/firebase";
+import fire from "../../../Config/firebase";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword  } from "firebase/auth";
 
 // Composants
 
@@ -14,6 +15,7 @@ function Authentification() {
 
     const location = useLocation();
     const navigate = useNavigate();
+    const auth = getAuth(fire);
 
     //states
 
@@ -45,14 +47,16 @@ function Authentification() {
                 valid: false,
                 validation : {
                     required  : true,
+                    minLength : 6
                 },
                 touched: false,
-                error : "Le mot de passe est invalide."
+                error : "Le mot de passe doit faire au minimum 6 caractères."
             }
         });
 
-    const [valid, setValid] = useState(location.state && location.state.article ? true : false);
-
+    const [valid, setValid] = useState(false);
+    const [emailError, setEmailError] = useState(false);
+    const [loginError, setLoginError] = useState(false);
     // Fonctions
         
     const inputChangedHandler =(event, id) => {
@@ -80,12 +84,21 @@ function Authentification() {
         const user = {
             email: inputs.email.value,
             password: inputs.password.value
-        }
-
-        console.log(user);
-
-        navigate(routes.HOME);
-    } 
+        };
+        createUserWithEmailAndPassword(auth, user.email, user.password)
+            .then(response => {
+                navigate(routes.HOME);
+            })
+            .catch((error) => {
+                switch (error.code) {
+                    case 'auth/email-already-in-use':
+                            setEmailError(true);                      
+                        break;
+                }
+                console.log(error.code);
+                console.log(error.message);
+            });      
+    };
 
     const loginClickedHandler = () => {
 
@@ -94,9 +107,26 @@ function Authentification() {
             password: inputs.password.value
         }
 
-        console.log(user);
+        signInWithEmailAndPassword(auth, user.email, user.password)
+            .then ((userCredential) => {
+                const user = userCredential.user;
+            })
+            .then(response => {
+                navigate(routes.HOME);
+            })
+            .catch((error) => {
+                switch (error.code) {
+                    case 'auth/invalide-email':
+                    case 'auth/user-disabled':
+                    case 'auth/user-not-found':
+                        setLoginError(true);                      
+                        break;
+                }
+                console.log(error.code);
+                console.log(error.message);
+            });
 
-        navigate(routes.HOME);
+        
 
     }
     // Variables
@@ -140,6 +170,8 @@ function Authentification() {
         <>
             <h1>Authentification</h1>
             <div className={classes.form}>
+                {loginError ? <div className={classes.alert}>Impossible de vous authentifier.</div> : null}
+                {emailError ? <div className={classes.alert}>Cette adresse email est déjà utilisée.</div> : null}
                 {form}
             </div>
         </>

@@ -1,9 +1,10 @@
 // Librairies
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import { Route, Routes, useNavigate } from 'react-router-dom';
 import routes from './Config/routes.js';
-
+import fire from './Config/firebase.js';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 // Composants
 import Layout from './HOC/Layout/Layout';
@@ -15,6 +16,26 @@ import ManageArticle from './Containers/Admin/ManageArticle/ManageArticle.js';
 import Authentification from './Containers/Security/Authentification/Authentification.js';
 
 function App() {
+
+  //State
+  const [user, setUser] = useState('');
+
+  //ComponentDidMount
+  useEffect(() => {
+    authListener();
+  }, []);
+
+  const authListener = () => {
+    const auth = getAuth(fire);
+    onAuthStateChanged(auth, user => {
+      if (user) {
+        setUser(user);
+      }
+      else {
+        setUser('');
+      }
+    }); 
+  };
 
   return (
     <div className="App">
