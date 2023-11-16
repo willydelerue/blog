@@ -113,7 +113,6 @@ const Article = (props) => {
                 Publié le {date}.
             </span>
             {article.brouillon == "true" ? <span className={classes.badge}>Brouillon</span> : null}
-
         </div>
             </div>
 
