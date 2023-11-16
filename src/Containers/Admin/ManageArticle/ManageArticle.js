@@ -3,11 +3,12 @@
 import React, { useState } from "react";
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import axios from '../../../Config/axios-firebase.js';
+import classes from './ManageArticle.module.css';
+import routes from '../../../Config/routes.js';
+import { checkValidity } from "../../../shared/utility.js";
 
 // composants
 import Input from '../../../Components/UI/Input/Input.js';
-import classes from './ManageArticle.module.css';
-import routes from '../../../Config/routes.js';
 
 
 function ManageArticle(props) {
@@ -93,24 +94,6 @@ function ManageArticle(props) {
         const [valid, setValid] = useState(location.state && location.state.article ? true : false);
 
     // Fonctions
-
-    const checkValidity = (value, rules) => {
-        let isValid = true;
-
-        if (rules.required) {
-            isValid = value.trim() !== '' && isValid;           
-        }
-
-        if (rules.minLength) {
-            isValid = value.length >= rules.minLength && isValid;
-        }
-
-        if(rules.maxLength) {
-            isValid = value.length <= rules.maxLength && isValid;
-        }
-
-        return isValid;
-    }    
         
     const inputChangedHandler =(event, id) => {
 

@@ -13,6 +13,7 @@ function Navigation() {
             <NavigationItem to={routes.ARTICLES}>Articles</NavigationItem>
             <NavigationItem to={routes.CONTACT}>Contact</NavigationItem>
             <NavigationItem to={routes.MANAGE_ARTICLE}>Ajouter</NavigationItem>
+            <NavigationItem to={routes.AUTHENTIFICATION}>Authentification</NavigationItem>
         </ul>
     );
 }

@@ -12,6 +12,7 @@ import Contact from './Components/Contact/Contact';
 import Articles from './Containers/Articles/Articles';
 import Article from './Containers/Articles/Article/Article';
 import ManageArticle from './Containers/Admin/ManageArticle/ManageArticle.js';
+import Authentification from './Containers/Security/Authentification/Authentification.js';
 
 function App() {
 
@@ -24,6 +25,7 @@ function App() {
           <Route exact path={routes.ARTICLES} element ={<Articles />} />
           <Route exact path={routes.ARTICLES + "/:slug"} element ={<Article />} />
           <Route exact path={routes.MANAGE_ARTICLE} element ={<ManageArticle  />} />
+          <Route exact path={routes.AUTHENTIFICATION} element ={<Authentification  />} />
           <Route render={() => <h1>404</h1>} />
         </Routes>
       </Layout>
