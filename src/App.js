@@ -39,14 +39,14 @@ function App() {
 
   return (
     <div className="App">
-      <Layout>
+      <Layout user={user}>
         <Routes>
           <Route exact path={routes.HOME} element ={<Home />} />
           <Route path={routes.CONTACT + "/*"} element ={<Contact />} />
           <Route exact path={routes.ARTICLES} element ={<Articles />} />
           <Route exact path={routes.ARTICLES + "/:slug"} element ={<Article />} />
-          <Route exact path={routes.MANAGE_ARTICLE} element ={<ManageArticle  />} />
-          <Route exact path={routes.AUTHENTIFICATION} element ={<Authentification  />} />
+          {user ? <Route exact path={routes.MANAGE_ARTICLE} element ={<ManageArticle  />} /> : null }
+          {!user  ? <Route exact path={routes.AUTHENTIFICATION} element ={<Authentification  />} /> : null }
           <Route render={() => <h1>404</h1>} />
         </Routes>
       </Layout>

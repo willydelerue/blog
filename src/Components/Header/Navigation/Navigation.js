@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 // Composants
 import NavigationItem from './Navigationitem/Navigationitem';
 
-function Navigation() {
+function Navigation(props) {
 
     //React router v6
     let navigate = useNavigate();
@@ -28,9 +28,9 @@ function Navigation() {
             <NavigationItem exact to={routes.HOME}>Accueil</NavigationItem>
             <NavigationItem to={routes.ARTICLES}>Articles</NavigationItem>
             <NavigationItem to={routes.CONTACT}>Contact</NavigationItem>
-            <NavigationItem to={routes.MANAGE_ARTICLE}>Ajouter</NavigationItem>
-            <NavigationItem to={routes.AUTHENTIFICATION}>Authentification</NavigationItem>
-            <button onClick={logoutClickedHandler} className={classes.logout}>Déconnexion</button>
+            {props.user ? <NavigationItem to={routes.MANAGE_ARTICLE}>Ajouter</NavigationItem> : null}
+            {!props.user ? <NavigationItem to={routes.AUTHENTIFICATION}>Authentification</NavigationItem> : null}
+            {props.user ? <button onClick={logoutClickedHandler} className={classes.logout}>Déconnexion</button> : null}
         </ul>
     );
 }

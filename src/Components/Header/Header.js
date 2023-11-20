@@ -5,7 +5,7 @@ import classes from './Header.module.css';
 // Composant
 import Navigation from './Navigation/Navigation';
 
-function Header() {
+function Header(props) {
     return (
         <header className={classes.Header}>
             <div className={['container', classes.flex].join(' ')}>
@@ -14,7 +14,7 @@ function Header() {
                 </div>
 
                 <nav>
-                    <Navigation />
+                    <Navigation user={props.user}/>
                 </nav>
             </div>
         </header>

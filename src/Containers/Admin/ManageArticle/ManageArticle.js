@@ -6,6 +6,8 @@ import axios from '../../../Config/axios-firebase.js';
 import classes from './ManageArticle.module.css';
 import routes from '../../../Config/routes.js';
 import { checkValidity } from "../../../shared/utility.js";
+import fire from '../../../Config/firebase.js';
+import { getAuth, getIdToken} from "firebase/auth";
 
 // composants
 import Input from '../../../Components/UI/Input/Input.js';
@@ -149,8 +151,13 @@ function ManageArticle(props) {
             slug: slug
         };
 
+        const auth = getAuth(fire)
+        const { currentUser } = auth
+        getIdToken(currentUser, true)
+            .then(token => {
+
         if (location.state && location.state.article) {
-            axios.put('/articles/' + location.state.article.id + '.json', article)
+            axios.put('/articles/' + location.state.article.id + '.json?auth=' + token, article)
                 .then(Response => {
                     console.log(Response);                            
                     navigate(routes.ARTICLES + '/' + article.slug, {replace : true});
@@ -160,7 +167,7 @@ function ManageArticle(props) {
             });
         }
         else {
-            axios.post('/articles.json', article)
+            axios.post('/articles.json?auth=' + token, article)
                 .then(Response => {
                     console.log(Response);                            
                     navigate(routes.ARTICLES, {replace : true});
@@ -168,7 +175,11 @@ function ManageArticle(props) {
                 .catch(error => {
                     console.log(error);
                 });
-    }
+        }
+    })
+    .catch(error => {
+        console.log(error);
+    });
 }
 
     // Variables

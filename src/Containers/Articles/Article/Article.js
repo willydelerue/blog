@@ -64,13 +64,21 @@ const Article = (props) => {
 
   // Fonctions
   const deleteClickedHandler = () => {
-    axios.delete('/articles/' + article.id +'.json')
-    .then(Response => {                           
-        navigate(routes.HOME);
+
+    props.user.getIdToken()
+      .then(token => {
+
+      axios.delete('/articles/' + article.id +'.json?auth=' + token)
+      .then(Response => {                           
+          navigate(routes.HOME);
+        })
+      .catch(error => {
+          console.log(error);
+        })
+        .catch(error => {
+          console.log(error);
+        })
     })
-    .catch(error => {
-        console.log(error);
-    });
   }
 
   // VARIABLES
@@ -98,14 +106,21 @@ const Article = (props) => {
                 {article.accroche}
             </div>
         {article.contenu}
-        <div className={classes.button}>
-        <Link 
-            to={routes.MANAGE_ARTICLE} 
-            state={ {article: article} }>
-                <button>Modifier</button>
-        </Link>
+
+        {props.user ?
+          <div className={classes.button}>
+            <Link 
+                to={routes.MANAGE_ARTICLE} 
+                state={ {article: article} }>
+                    <button>Modifier</button>
+            </Link>
             <button onClick={deleteClickedHandler}>Supprimer</button>
-        </div>
+          </div>
+
+       :
+
+       null}
+
         </div>
         <div className={classes.author}>
             <b>{article.auteur}</b>
