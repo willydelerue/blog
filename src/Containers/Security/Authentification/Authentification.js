@@ -1,15 +1,16 @@
 //Librairies
-import React, { useState} from "react";
+import React, { useState, useEffect} from "react";
 import { checkValidity } from "../../../shared/utility";
 import { useLocation, useNavigate } from "react-router-dom";
 import classes from './Authentification.module.css';
 import fire from "../../../Config/firebase";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword  } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 
 // Composants
 
 import Input from "../../../Components/UI/Input/Input";
 import routes from "../../../Config/routes";
+import { toast } from "react-toastify";
 
 function Authentification() {
 
@@ -57,6 +58,12 @@ function Authentification() {
     const [valid, setValid] = useState(false);
     const [emailError, setEmailError] = useState(false);
     const [loginError, setLoginError] = useState(false);
+
+    // ComponentDidUpdate
+    useEffect(() => {
+        document.title = 'Authentification'; 
+      });
+
     // Fonctions
         
     const inputChangedHandler =(event, id) => {
@@ -87,6 +94,7 @@ function Authentification() {
         };
         createUserWithEmailAndPassword(auth, user.email, user.password)
             .then(response => {
+                toast.success('Bienvenue !');
                 navigate(routes.HOME);
             })
             .catch((error) => {
@@ -112,6 +120,7 @@ function Authentification() {
                 const user = userCredential.user;
             })
             .then(response => {
+                toast.success('Vous revoici !');
                 navigate(routes.HOME);
             })
             .catch((error) => {

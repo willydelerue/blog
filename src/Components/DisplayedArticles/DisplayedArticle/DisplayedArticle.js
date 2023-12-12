@@ -2,6 +2,7 @@ import React from "react";
 import classes from './DisplayedArticle.module.css';
 import { Link } from 'react-router-dom';
 import routes from "../../../Config/routes";
+import PropTypes from 'prop-types';
 
 function DisplayedArticle(props) {
 
@@ -15,5 +16,9 @@ function DisplayedArticle(props) {
         </Link>
     );
 }
+
+DisplayedArticle.propTypes = {
+    article: PropTypes.object
+};
 
 export default DisplayedArticle;

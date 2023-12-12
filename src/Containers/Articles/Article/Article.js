@@ -11,6 +11,9 @@ import { Link } from 'react-router-dom';
 import axios from '../../../Config/axios-firebase';
 import classes from './Article.module.css';
 import routes from '../../../Config/routes';
+import { toast } from 'react-toastify';
+import moment from 'moment';
+import 'moment/locale/fr';
 
 
 
@@ -38,6 +41,7 @@ const Article = (props) => {
         .then(response => {
 
         if(Object.keys(response.data).length === 0) {
+            toast.error("Cet article n'existe pas");
             navigate(routes.HOME);
         }
         // Boucle pour récupération du titre
@@ -47,38 +51,39 @@ const Article = (props) => {
           setArticle({
             ...response.data[key],
             id: key,
-
           });
-
         }
 
       })
 
       .catch(error => {
-
         console.log(error);
-
       });
 
   }, []);
 
+  useEffect(() => {
+    document.title = article.titre; 
+  });
+
   // Fonctions
   const deleteClickedHandler = () => {
 
-    props.user.getIdToken()
-      .then(token => {
+      props.user.getIdToken()
+        .then(token => {
 
-      axios.delete('/articles/' + article.id +'.json?auth=' + token)
-      .then(Response => {                           
-          navigate(routes.HOME);
-        })
-      .catch(error => {
-          console.log(error);
+        axios.delete('/articles/' + article.id +'.json?auth=' + token)
+        .then(Response => {     
+            toast.success('Article supprimé avec succès');                      
+            navigate(routes.HOME);
+          })
+        .catch(error => {
+            console.log(error);
+          });
         })
         .catch(error => {
           console.log(error);
-        })
-    })
+      });
   }
 
   // VARIABLES
@@ -91,8 +96,14 @@ const Article = (props) => {
 
   // Variable 2 - Transformation date locale du pays
 
-  let date = new Date(article.date).toLocaleDateString('fr-FR');
+  // let date = new Date(article.date).toLocaleDateString('fr-FR');
+  moment.locale('fr');
+  let date = moment.unix(article.date / 1000).calendar();
 
+  let contenu = '';
+    if(article.contenu) {
+        contenu  = article.contenu.split('\n').map(str => <p>{str}</p>)
+    }
 
 
   // Rendu JSX
@@ -101,35 +112,38 @@ const Article = (props) => {
 
     <div className='container'>
         <h1>{article.titre}</h1>
+
         <div className={classes.content}>
             <div className={classes.lead}>
                 {article.accroche}
             </div>
-        {article.contenu}
+            {contenu}
 
-        {props.user ?
-          <div className={classes.button}>
-            <Link 
-                to={routes.MANAGE_ARTICLE} 
-                state={ {article: article} }>
-                    <button>Modifier</button>
-            </Link>
-            <button onClick={deleteClickedHandler}>Supprimer</button>
-          </div>
+            {props.user ?
+              <div className={classes.button}>
+                <Link 
+                    to={routes.MANAGE_ARTICLE} 
+                    state={ {article: article} }>
+                        <button>Modifier</button>
+                </Link>
+                <button onClick={deleteClickedHandler}>Supprimer</button>
+              </div>
 
-       :
+              :
 
-       null}
+              null
+          }
 
         </div>
+
         <div className={classes.author}>
             <b>{article.auteur}</b>
             <span>
-                Publié le {date}.
+                Publié {date}.
             </span>
             {article.brouillon == "true" ? <span className={classes.badge}>Brouillon</span> : null}
         </div>
-            </div>
+    </div>
 
   );
 

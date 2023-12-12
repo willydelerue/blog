@@ -1,7 +1,5 @@
+//Librairies
 import React, { useState, useEffect } from 'react';
-// import { Redirect } from 'react-router-dom';
-import { Link, useNavigate } from 'react-router-dom';
-import routes from "../../Config/routes";
 import axios from '../../Config/axios-firebase';
 
 // Composant
@@ -39,6 +37,10 @@ function Articles() {
             });
 
     }, []);
+
+    useEffect(() => {
+        document.title = 'Articles'; 
+      });
 
     return (
         <>

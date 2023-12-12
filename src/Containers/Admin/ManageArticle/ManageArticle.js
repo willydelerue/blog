@@ -1,6 +1,7 @@
 //Librairies
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { toast } from 'react-toastify';
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import axios from '../../../Config/axios-firebase.js';
 import classes from './ManageArticle.module.css';
@@ -95,6 +96,11 @@ function ManageArticle(props) {
     });
         const [valid, setValid] = useState(location.state && location.state.article ? true : false);
 
+    // ComponentDidUpdate
+    useEffect(() => {
+        document.title = 'Gérer un article'; 
+      });   
+
     // Fonctions
         
     const inputChangedHandler =(event, id) => {
@@ -159,7 +165,8 @@ function ManageArticle(props) {
         if (location.state && location.state.article) {
             axios.put('/articles/' + location.state.article.id + '.json?auth=' + token, article)
                 .then(Response => {
-                    console.log(Response);                            
+                    console.log(Response);   
+                    toast.success('Article modifié avec succès');                         
                     navigate(routes.ARTICLES + '/' + article.slug, {replace : true});
             })
             .catch(error => {
@@ -169,7 +176,8 @@ function ManageArticle(props) {
         else {
             axios.post('/articles.json?auth=' + token, article)
                 .then(Response => {
-                    console.log(Response);                            
+                    console.log(Response);
+                    toast.success('Article ajouté avec succès');                            
                     navigate(routes.ARTICLES, {replace : true});
                 })
                 .catch(error => {
